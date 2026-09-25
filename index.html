@@ -53,6 +53,29 @@ main{max-width:720px;margin:0 auto;padding:16px}
 .t-blue span{display:flex;flex-direction:column}
 .t-orange{background:var(--orange);color:#231300}
 .t-line{background:var(--bg);border:3px dashed var(--blue)}
+.t-soft{background:var(--orange-soft);color:var(--ink)}
+.t-sky{background:var(--sky);color:var(--ink);border:3px solid var(--blue)}
+img.ph{width:7rem;height:7rem;object-fit:cover;border-radius:24px;display:block}
+.storytext{font-size:1.4rem;font-weight:700;text-align:center;margin:6px 4px 4px;line-height:1.4}
+.ans{display:flex;flex-direction:column;align-items:center;min-width:120px;min-height:90px;justify-content:center;border:3px dashed var(--orange);border-radius:20px;padding:8px 14px;font-size:3rem}
+.ans .em2{font-size:3.4rem;line-height:1}
+.ans .word{font-size:1.6rem}
+.stgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
+.stt{font-weight:800;font-size:1.15rem;text-align:center}
+.claps{display:flex;justify-content:center;flex-wrap:wrap;gap:6px;font-size:2.4rem;min-height:56px}
+.clapbtn{font-size:3rem;width:120px;height:120px;border-radius:50%;padding:0;display:block;margin:0 auto 6px}
+.pulse{animation:grow .25s}
+.syl{display:inline-block;padding:0 2px;border-radius:8px}
+.syl.lit{background:var(--orange);color:#231300}
+.dash{color:var(--muted);padding:0 2px}
+.refcard{display:flex;align-items:center;justify-content:center;gap:12px;background:var(--orange-soft);border-radius:var(--rm);padding:10px;margin-top:10px}
+.refcard .em{font-size:3.4rem;line-height:1}
+.kprev{margin-top:8px;font-size:3rem}
+.kprev img.ph,.kpic img.ph{width:64px;height:64px;border-radius:14px}
+.krow{display:flex;align-items:center;gap:12px;padding:8px 10px;border-radius:14px;background:var(--sky);margin-bottom:8px}
+.krow .kpic{font-size:2.2rem;line-height:1}
+.krow .word{font-size:1.4rem;flex:1}
+textarea.note{font-size:.95rem;font-family:inherit}
 .row2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
 @media (max-width:380px){.row2{grid-template-columns:1fr}}
 .album{margin-top:20px;padding:16px;border-radius:var(--rm);background:var(--sky)}
@@ -168,8 +191,12 @@ ul.notes{padding-left:20px;margin:6px 0}
       <button class="tile t-orange" data-go="par"><span class="em">🦜</span><b>Şaşkın Papağan</b><small>Hatayı yakala, taklit oyna</small></button>
       <button class="tile t-line" data-go="map"><span class="em">🗺️</span><b>Ses Haritası</b><small>Ebeveynle ses taraması</small></button>
     </div>
+    <div class="row2">
+      <button class="tile t-soft" data-go="story"><span class="em">📖</span><b>Hikâye Zamanı</b><small>Boşluğu sen tamamla</small></button>
+      <button class="tile t-sky" data-go="fon"><span class="em">👏</span><b>Ses Oyunları</b><small>Hece, kafiye, ilk ses</small></button>
+    </div>
     <div class="album"><h2>Çıkartma albümü</h2><div id="album"></div></div>
-    <div class="ctl"><button class="btn" data-go="pan">📊 Ebeveyn paneli</button></div>
+    <div class="ctl"><button class="btn" data-go="pan">📊 Ebeveyn paneli</button><button class="btn" data-go="kel">⭐ Kendi kelimelerimiz</button></div>
   </section>
 
   <!-- DEDEKTİF -->
@@ -226,6 +253,38 @@ ul.notes{padding-left:20px;margin:6px 0}
     </div>
   </section>
 
+  <!-- HİKÂYE -->
+  <section id="s-story" class="screen">
+    <div id="stList"></div>
+    <div id="stRun" hidden>
+      <p class="small center" id="stProg"></p>
+      <div class="bigpic" id="stPic"></div>
+      <div class="storytext" id="stText"></div>
+      <div class="ctl" id="stCtl"></div>
+    </div>
+  </section>
+
+  <!-- SES OYUNLARI -->
+  <section id="s-fon" class="screen">
+    <div class="seg small" id="fonSeg"><button data-fm="hece" class="on">👏 Hece</button><button data-fm="kafiye">🎵 Kafiye</button><button data-fm="ilk">🔤 İlk ses</button></div>
+    <p class="hint" id="fonHint"></p>
+    <div id="fonArea"></div>
+    <div class="ctl" id="fonCtl"></div>
+  </section>
+
+  <!-- KENDİ KELİMELERİMİZ -->
+  <section id="s-kel" class="screen">
+    <p class="small">Çocuğunuzun hayatından kelimeler ekleyin: kardeşinin adı, oyuncakları, sevdiği şeyler ya da terapistin verdiği kelimeler. Papağan ve Taklit bu kelimeleri daha sık getirir.</p>
+    <div class="field"><label for="kWord">Kelime (tek kelime)</label><input class="note" id="kWord" placeholder="ör. kamyon, zeynep" autocomplete="off"></div>
+    <div class="field"><label>Hangi ses vurgulansın?</label><div class="chips" id="kLet"></div></div>
+    <div class="field"><label for="kEmoji">Resim: emoji ya da fotoğraf</label>
+      <div class="ctl" style="justify-content:flex-start;margin-top:0"><input class="note" id="kEmoji" placeholder="Emoji, ör. 🚛" style="max-width:190px;margin:0"><button class="btn" id="kPhoto">📷 Fotoğraf</button></div>
+      <div id="kPrev" class="kprev"></div></div>
+    <div class="ctl"><button class="btn blue" id="kTest">🔊 Dinle</button><button class="btn ok" id="kAdd">➕ Ekle</button></div>
+    <h3 class="sub">Eklenen kelimeler</h3>
+    <div id="kList"></div>
+  </section>
+
   <!-- EBEVEYN PANELİ -->
   <section id="s-pan" class="screen">
     <h3 class="sub">Bugün</h3>
@@ -238,6 +297,9 @@ ul.notes{padding-left:20px;margin:6px 0}
     <p class="small" id="panSel"></p>
     <div class="tbl"><table class="pt" id="panTable"></table></div>
     <p class="small"><b>Dinleme:</b> Dedektif ve Papağan'da doğru duyma oranı. <b>Söyleme:</b> sizin işaretlediğiniz telaffuz (Taklit ve "Sen söyle" modu, "yaklaştı" yarım puan). <b>Taklit:</b> kaç kez kayıt yaptı. En zorlandığı sesler üstte. 3'ten az denemede renk verilmez.</p>
+    <div class="ctl"><button class="btn orange" id="panShare">📤 Terapiste gönder</button></div>
+    <p class="small center" id="repMsg"></p>
+    <textarea class="note" id="repBox" rows="10" hidden readonly></textarea>
     <div class="ctl"><button class="btn blue" id="panMap">🗺️ Ses Haritası sonuçları</button><button class="btn" id="panAllBtn">Tüm seslere dön</button></div>
     <div class="ctl"><button class="btn" id="panReset">İstatistikleri sıfırla</button></div>
     <p class="small">Bu tablo bir ölçüm aracı değil, gözlem notudur. Terapistinizle paylaşmak için ekran görüntüsü alabilirsiniz.</p>
@@ -272,6 +334,7 @@ ul.notes{padding-left:20px;margin:6px 0}
 </main>
 
 <input type="file" id="recFile" accept="audio/*" capture hidden>
+<input type="file" id="kFile" accept="image/*" hidden>
 <div class="ov" id="ovR"><div class="box"><div class="big" id="ovRs"></div><h2>Yeni çıkartma!</h2><p>Albümüne eklendi.</p>
   <button class="btn blue" id="ovRc">Süper!</button></div></div>
 <div class="ov" id="ovB"><div class="box"><div class="big">🌳</div><h2>10 dakika oldu!</h2><p>Harika çalıştın. Biraz mola verelim mi?</p>
@@ -483,25 +546,28 @@ function showReward(s){
 }
 $('#ovRc').onclick=()=>{$('#ovR').classList.remove('show');rewardOpen=false;if(pendingNext){const f=pendingNext;pendingNext=null;f();}};
 setInterval(()=>{
-  if(sessStart&&!breakShown&&cur!=='home'&&cur!=='set'&&Date.now()-sessStart>10*60e3){breakShown=true;stopSpeech();$('#ovB').classList.add('show');}
+  if(sessStart&&!breakShown&&GAMES.includes(cur)&&Date.now()-sessStart>10*60e3){breakShown=true;stopSpeech();$('#ovB').classList.add('show');}
 },15000);
 $('#brk1').onclick=()=>{$('#ovB').classList.remove('show');sessStart=null;breakShown=false;go('home');};
 $('#brk2').onclick=()=>{$('#ovB').classList.remove('show');sessStart=Date.now()-5*60e3;breakShown=false;};
 
 /* ---------- GEZİNME ---------- */
-const TITLES={home:'Ses Macerası',det:'Ses Dedektifi',par:'Şaşkın Papağan',map:'Ses Haritası',set:'Ayarlar',pan:'Ebeveyn Paneli'};
+const TITLES={home:'Ses Macerası',det:'Ses Dedektifi',par:'Şaşkın Papağan',map:'Ses Haritası',set:'Ayarlar',pan:'Ebeveyn Paneli',story:'Hikâye Zamanı',fon:'Ses Oyunları',kel:'Kendi Kelimelerimiz'};
 function go(id){
   stopSpeech();micRelease();cur=id;
   document.querySelectorAll('.screen').forEach(x=>x.classList.toggle('active',x.id==='s-'+id));
   $('#title').textContent=TITLES[id];
   $('#backBtn').style.visibility=id==='home'?'hidden':'visible';
-  if(id!=='home'&&id!=='set'&&!sessStart)sessStart=Date.now();
+  if(GAMES.includes(id)&&!sessStart)sessStart=Date.now();
   if(id==='home')homeRender();
   if(id==='det')detNext();
   if(id==='par')parNext();
   if(id==='map')mapIntro();
   if(id==='set')setRender();
   if(id==='pan')panRender();
+  if(id==='story')storyList();
+  if(id==='fon')fonNext();
+  if(id==='kel')kelRender();
   window.scrollTo(0,0);
 }
 document.addEventListener('click',e=>{const g=e.target.closest('[data-go]');if(g)go(g.dataset.go);});
@@ -539,7 +605,7 @@ function pairLetters(p){
   return [...o];
 }
 setInterval(()=>{
-  if(['det','par','map'].includes(cur)&&!document.hidden&&!$('#ovB').classList.contains('show')){today().sec+=5;saveStats();}
+  if(GAMES.includes(cur)&&!document.hidden&&!$('#ovB').classList.contains('show')){today().sec+=5;saveStats();}
 },5000);
 
 function letterScore(o){
@@ -552,7 +618,12 @@ function cell(ok,tot){
   const p=ok/tot,cls=tot<3?'':(p<0.6?'no':(p<0.8?'mid':'ok'));
   return '<td class="'+cls+'">'+Math.round(p*100)+'%<small>'+(Math.round(ok*10)/10)+'/'+tot+'</small></td>';
 }
+function panRows(){
+  const rows=ALPHA.filter(L=>STATS.L[L]).map(L=>({L,o:STATS.L[L],sc:letterScore(STATS.L[L])})).filter(x=>x.sc.tot||x.o.tk);
+  rows.sort((a,b)=>(a.sc.pct==null?2:a.sc.pct)-(b.sc.pct==null?2:b.sc.pct));return rows;
+}
 function panRender(){
+  $('#repBox').hidden=true;$('#repMsg').textContent='';
   const t=STATS.D[dayKey()]||{sec:0,rounds:0};
   $('#panToday').innerHTML='<div><b>'+Math.round(t.sec/60)+'</b><span>dakika</span></div><div><b>'+t.rounds+'</b><span>tur</span></div><div><b>'+ST.stickers.length+'</b><span>çıkartma</span></div>';
   // son 7 gün
@@ -561,8 +632,7 @@ function panRender(){
   const mx=Math.max(10,...mins);
   $('#panWeek').innerHTML=days.map((d,i)=>'<div class="bar"><i style="height:'+(mins[i]/mx*100)+'%"></i><b>'+(mins[i]||'')+'</b><span>'+d.toLocaleDateString('tr-TR',{weekday:'short'})+'</span></div>').join('');
   // ses ses
-  const rows=ALPHA.filter(L=>STATS.L[L]).map(L=>({L,o:STATS.L[L],sc:letterScore(STATS.L[L])})).filter(x=>x.sc.tot||x.o.tk);
-  rows.sort((a,b)=>(a.sc.pct==null?2:a.sc.pct)-(b.sc.pct==null?2:b.sc.pct));
+  const rows=panRows();
   $('#panTable').innerHTML=rows.length?'<tr><th>Ses</th><th>Dinleme</th><th>Söyleme</th><th>Taklit</th></tr>'+rows.map(x=>
     '<tr><td class="s">'+x.L+'</td>'+cell(x.sc.lok,x.sc.ltot)+cell(x.sc.pok,x.sc.ptot)+'<td>'+(x.o.tk||'–')+'</td></tr>').join('')
     :'<tr><td>Henüz veri yok. Oynadıkça burası dolacak.</td></tr>';
@@ -666,7 +736,8 @@ function roundLetters(){if(wantEasy())return EARLY;const l=S.sounds.filter(L=>LA
 function pickWordRound(){
   const ls=roundLetters();
   let pool=WORDS.filter(x=>ls.includes(x.s)&&(x.s+x.w)!==par.lastKey);if(!pool.length)pool=WORDS;
-  const x=rnd(pool);return {words:[x.w],wi:0,L:x.s,e:x.e,lvl:1,key:x.s+x.w};
+  const cw=CUSTOM.filter(x=>ls.includes(x.s)&&(x.s+x.w)!==par.lastKey);
+  const x=(cw.length&&Math.random()<0.35)?rnd(cw):rnd(pool);return {words:[x.w],wi:0,L:x.s,e:x.e,lvl:1,key:x.s+x.w};
 }
 function pickPhraseRound(list,lvl){
   const build=ls=>{const o=[];list.forEach(p=>p.words.forEach((w,wi)=>ls.forEach(L=>{if(w.includes(lc(L)))o.push({p,wi,L});})));return o;};
@@ -682,7 +753,7 @@ function parNext(){
   const r=lvl===1?pickWordRound():pickPhraseRound(lvl===2?PHRASES:SENTS,lvl);
   par.r=r;par.lastKey=r.key;par.wrong=Math.random()<.5;par.done=false;
   const cw=r.words[r.wi],sw=r.words.slice();sw[r.wi]=par.wrong?corrupt(cw,r.L):cw;par.said=sw.join(' ');
-  $('#parPic').innerHTML='<span class="em'+(lvl>1?' multi':'')+'">'+r.e+'</span><span class="'+(lvl===1?'word':'phrase')+(lvl===3?' cap':'')+' hide" id="parWord">'+phraseHTML(r)+'</span>';
+  $('#parPic').innerHTML='<span class="em'+(lvl>1?' multi':'')+'">'+picHTML(r.e)+'</span><span class="'+(lvl===1?'word':'phrase')+(lvl===3?' cap':'')+' hide" id="parWord">'+phraseHTML(r)+'</span>';
   $('#bubble').textContent=lvl===1?'Dinle bakalım, doğru mu söyleyeceğim?':'Dinle bakalım, hepsini doğru mu söyleyeceğim?';
   $('#parCtl').innerHTML='<button class="btn ok" id="pOk">✅ Doğru</button><button class="btn orange" id="pNo">❌ Yanlış</button><button class="btn" id="pRe">🔊 Tekrar</button>';
   parSpeak();
@@ -748,7 +819,7 @@ async function mirModel(my){const r=mir.r,w=r.words[0];await sayWord(w,posOf(w,r
 function mirNext(){
   const r=pickWordRound();mir.r=r;par.lastKey=r.key;mir.recorded=false;mir.marked=false;
   const w=r.words[0];
-  $('#parPic').innerHTML='<span class="em">'+r.e+'</span><span class="word">'+wordHTML(w,posOf(w,r.L))+'</span>';
+  $('#parPic').innerHTML='<span class="em">'+picHTML(r.e)+'</span><span class="word">'+wordHTML(w,posOf(w,r.L))+'</span>';
   $('#bubble').textContent='Önce ben söyleyeyim, sonra sen söyle. Seni taklit edeceğim!';
   mirCtl('start');
   (async()=>{const my=await begin();if(!await birdSay(my,'Dinle!'))return;await wait(150);await mirModel(my);})();
@@ -874,6 +945,274 @@ $('#mapAgain').onclick=mapBegin;
 $('#mapLast').onclick=mapResults;
 $('#mapListen').onclick=async()=>{const m=mp.list[mp.i];const my=await begin();await sayWord(m.w,m.i,$('#mapCard'),my);};
 document.querySelectorAll('[data-mk]').forEach(b=>b.onclick=()=>mapMark(b.dataset.mk));
+
+/* ---------- ORTAK ---------- */
+const GAMES=['det','par','map','story','fon'];
+function picHTML(e){return (e&&e.indexOf('data:')===0)?'<img class="ph" src="'+e+'" alt="">':e;}
+function logRound(){today().rounds++;saveStats();}
+
+/* ---------- HİKÂYE ZAMANI ---------- */
+const STORIES=[
+ {t:'Kedi Pamuk',e:'🐱',p:[
+  {e:'🐱',s:'Pamuk adında bir kedi varmış. Pamuk çok susamış. Kasesinden ne içmiş?',a:'süt',ae:'🥛',L:'S',m:'Pamuk kasesinden süt içmiş.'},
+  {e:'🌳',s:'Sonra bahçeye çıkmış. Ağaçta cik cik öten birini görmüş. Kimi görmüş?',a:'kuş',ae:'🐦',L:'K',m:'Ağaçta bir kuş görmüş.'},
+  {e:'🌼',s:'Kuş uçup gitmiş. Pamuk çimenlerde yuvarlak, zıplayan bir şey bulmuş. Ne bulmuş?',a:'top',ae:'⚽',L:'T',m:'Pamuk bir top bulmuş.'},
+  {e:'🌙',s:'Akşam olmuş. Gökyüzünde küçük küçük ne parlıyormuş?',a:'yıldız',ae:'⭐',L:'Z',m:'Gökyüzünde yıldız parlıyormuş.'}]},
+ {t:'Minik Tavşan',e:'🐰',p:[
+  {e:'🐰',s:'Minik tavşan çok acıkmış. En sevdiği turuncu sebze hangisiymiş?',a:'havuç',ae:'🥕',L:'Ç',m:'Minik tavşan havuç yemiş.'},
+  {e:'🌿',s:'Havucu yerken yanına yeşil, zıp zıp zıplayan biri gelmiş. Kim gelmiş?',a:'kurbağa',ae:'🐸',L:'K',m:'Yanına kurbağa gelmiş.'},
+  {e:'🏞️',s:'Birlikte göle gitmişler. Gölde vak vak diye kim yüzüyormuş?',a:'ördek',ae:'🦆',L:'R',m:'Gölde ördek yüzüyormuş.'},
+  {e:'🌃',s:'Hava kararmış. Gökyüzüne yuvarlak, sarı ne çıkmış?',a:'ay',ae:'🌙',L:'Y',m:'Gökyüzüne ay çıkmış.'}]},
+ {t:'Deniz Tatili',e:'🏖️',p:[
+  {e:'🏖️',s:'Ali ailesiyle tatile gitmiş. Önünde masmavi, dalgalı ne varmış?',a:'deniz',ae:'🌊',L:'Z',m:'Önünde masmavi deniz varmış.'},
+  {e:'🏖️',s:'Tepede sıcacık parlayan ne varmış?',a:'güneş',ae:'☀️',L:'Ş',m:'Tepede güneş parlıyormuş.'},
+  {e:'🏝️',s:'Kumda yan yan yürüyen biri varmış. Kimmiş?',a:'yengeç',ae:'🦀',L:'G',m:'Kumda yengeç yürüyormuş.'},
+  {e:'🥵',s:'Çok terlemişler. Soğuk ve tatlı ne yemişler?',a:'dondurma',ae:'🍦',L:'R',m:'Soğuk dondurma yemişler.'}]},
+ {t:'Dedemin Çiftliği',e:'🚜',p:[
+  {e:'🌅',s:'Dedemin çiftliğinde sabah erkenden ü-ürü-üü diye kim bağırmış?',a:'horoz',ae:'🐓',L:'R',m:'Sabah erkenden horoz bağırmış.'},
+  {e:'🌾',s:'Meee diyen, pamuk gibi beyaz, küçük hayvan kimmiş?',a:'kuzu',ae:'🐑',L:'Z',m:'Meee diyen kuzuymuş.'},
+  {e:'🏡',s:'Hav hav diyerek kim koşmuş?',a:'köpek',ae:'🐶',L:'K',m:'Hav hav diyerek köpek koşmuş.'},
+  {e:'🥚',s:'Kümeste yumurta yapan kimmiş?',a:'tavuk',ae:'🐔',L:'K',m:'Kümeste tavuk yumurta yapmış.'}]},
+ {t:'Doğum Günü',e:'🎂',p:[
+  {e:'🎉',s:'Bugün Can\'ın doğum günü! Masada mumlu, tatlı ne varmış?',a:'pasta',ae:'🎂',L:'S',m:'Masada pasta varmış.'},
+  {e:'🎉',s:'Tavana renk renk, uçan ne asmışlar?',a:'balon',ae:'🎈',L:'B',m:'Tavana balon asmışlar.'},
+  {e:'🎁',s:'Can hediyesini açmış. İçinden kırmızı, vın vın giden ne çıkmış?',a:'araba',ae:'🚗',L:'R',m:'İçinden araba çıkmış.'},
+  {e:'🎂',s:'Pastanın üstünde kaç mum varmış? Bir, iki, üç, dört ve...',a:'beş',ae:'🖐️',L:'Ş',m:'Pastanın üstünde beş mum varmış.'}]},
+ {t:'Yağmurlu Gün',e:'🌧️',p:[
+  {e:'🌥️',s:'Gökyüzünde gri, kocaman ne varmış?',a:'bulut',ae:'☁️',L:'L',m:'Gökyüzünde bulut varmış.'},
+  {e:'☁️',s:'Birden şıp şıp ne yağmaya başlamış?',a:'yağmur',ae:'🌧️',L:'R',m:'Birden yağmur yağmaya başlamış.'},
+  {e:'🌧️',s:'Islanmamak için ne açmışlar?',a:'şemsiye',ae:'☂️',L:'Ş',m:'Islanmamak için şemsiye açmışlar.'},
+  {e:'🌤️',s:'Yağmur bitince gökyüzünde renk renk ne çıkmış?',a:'gökkuşağı',ae:'🌈',L:'G',m:'Gökyüzünde gökkuşağı çıkmış.'}]},
+ {t:'Hayvanat Bahçesi',e:'🦁',p:[
+  {e:'🌳',s:'Boynu upuzun, sarı benekli hayvan kimmiş?',a:'zürafa',ae:'🦒',L:'Z',m:'Boynu upuzun olan zürafaymış.'},
+  {e:'🌳',s:'Hortumu olan kocaman, gri hayvan kimmiş?',a:'fil',ae:'🐘',L:'F',m:'Hortumu olan filmiş.'},
+  {e:'🌴',s:'Muz yiyip daldan dala atlayan kimmiş?',a:'maymun',ae:'🐒',L:'M',m:'Daldan dala atlayan maymunmuş.'},
+  {e:'🌳',s:'Kükreyen, ormanın kralı kimmiş?',a:'aslan',ae:'🦁',L:'S',m:'Ormanın kralı aslanmış.'}]}
+];
+let st={s:null,i:0,marked:false};
+function storyList(){
+  $('#stRun').hidden=true;$('#stList').hidden=false;
+  $('#stList').innerHTML='<p class="hint">Bir hikâye seç! Papağan okur, sen boşluğu tamamlarsın.</p><div class="stgrid">'+
+    STORIES.map((x,k)=>'<button class="pic" data-st="'+k+'"><span class="em">'+x.e+'</span><span class="stt">'+x.t+'</span></button>').join('')+'</div>';
+}
+$('#stList').addEventListener('click',e=>{const b=e.target.closest('[data-st]');if(!b)return;st.s=STORIES[+b.dataset.st];st.i=0;$('#stList').hidden=true;$('#stRun').hidden=false;stPage();});
+function stPage(){
+  const p=st.s.p[st.i];st.marked=false;
+  $('#stProg').textContent=st.s.t+'  ·  '+(st.i+1)+' / '+st.s.p.length;
+  $('#stPic').innerHTML='<span class="em">'+p.e+'</span><span class="ans" id="stAns">❓</span>';
+  $('#stText').textContent=p.s;
+  $('#stCtl').innerHTML='<button class="btn blue" id="sRe">🔊 Tekrar oku</button><button class="btn" id="sHint">💡 İpucu</button>'+
+    '<p class="small center" style="margin:10px 0 0">Ebeveyn için: nasıl söyledi?</p><button class="btn sm ok" id="sOk">✓ Doğru</button><button class="btn sm" id="sNear">≈ Yaklaştı</button><button class="btn sm orange" id="sX">✗ Farklı</button>';
+  stRead();
+}
+async function stRead(){const p=st.s.p[st.i];if(!p)return;await begin();await say(p.s,S.rate*0.95);}
+async function stModel(my,p){p=p||st.s.p[st.i];if(!p)return;await sayWord(p.a,posOf(p.a,p.L)[0],$('#stAns'),my);if(my!==seq)return;await wait(300);await say(p.m);}
+function stReveal(){const p=st.s.p[st.i];$('#stAns').innerHTML='<span class="em2">'+p.ae+'</span><span class="word">'+wordHTML(p.a,posOf(p.a,p.L))+'</span>';}
+$('#stCtl').addEventListener('click',async e=>{
+  const id=(e.target.closest('button')||{}).id;if(!id)return;const p=st.s.p[st.i];
+  if(id==='sRe')stRead();
+  if(id==='sHint'){$('#stAns').innerHTML='<span class="em2">'+p.ae+'</span>';}
+  if(id==='sOk'||id==='sNear'||id==='sX'){
+    if(st.marked)return;st.marked=true;const v=id==='sOk'?0:(id==='sNear'?1:2);
+    logProd([p.L],v);if(v===0){addStar();hit();}else miss();
+    stReveal();
+    $('#stCtl').innerHTML='<button class="btn blue" id="sModel">🔊 Doğrusu</button><button class="btn" id="sNext">Sonraki ›</button>';
+    const my=await begin();
+    if(v===0){await say(praise());if(my!==seq)return;await wait(200);await say(p.m);}
+    else{await say('Birlikte söyleyelim!');if(my!==seq)return;await wait(200);await stModel(my,p);}
+  }
+  if(id==='sModel'){const my=await begin();await stModel(my);}
+  if(id==='sNext'){
+    st.i++;
+    if(st.i<st.s.p.length){stPage();return;}
+    addStar();
+    $('#stProg').textContent=st.s.t;
+    $('#stPic').innerHTML='<span class="em">🎉</span>';$('#stText').textContent='Hikâye bitti! Harikaydın!';
+    $('#stCtl').innerHTML='<button class="btn blue" id="sAgain">Tekrar oku</button><button class="btn" id="sList">Başka hikâye</button>';
+    const my=await begin();await say('Hikâye bitti! Harikaydın!');
+  }
+  if(id==='sAgain'){st.i=0;stPage();}
+  if(id==='sList')storyList();
+});
+
+/* ---------- KENDİ KELİMELERİMİZ ---------- */
+let CUSTOM=store.get('custom',[]);
+let kS={L:null,img:null};
+function kWordVal(){return $('#kWord').value.trim().toLocaleLowerCase('tr').replace(/[^a-zçğıöşü]/g,'');}
+function kLetters(){
+  const w=kWordVal(),ls=[];[...w].forEach(c=>{const U=c.toLocaleUpperCase('tr');if(ALPHA.includes(U)&&!ls.includes(U))ls.push(U);});
+  if(!ls.includes(kS.L))kS.L=ls.find(L=>LATE.includes(L))||ls[0]||null;
+  $('#kLet').innerHTML=ls.length?ls.map(L=>'<button class="chip'+(L===kS.L?' on':'')+'" data-k="'+L+'">'+L+'</button>').join(''):'<span class="small">Önce kelimeyi yazın.</span>';
+}
+function kPrev(){const em=$('#kEmoji').value.trim();$('#kPrev').innerHTML=kS.img?'<img class="ph" src="'+kS.img+'" alt="">':(em?'<span class="em">'+em+'</span>':'');}
+function kelRender(){
+  kLetters();kPrev();
+  $('#kList').innerHTML=CUSTOM.length?CUSTOM.map((x,k)=>'<div class="krow"><span class="kpic">'+picHTML(x.e)+'</span><span class="word">'+wordHTML(x.w,posOf(x.w,x.s))+'</span><span class="small">'+x.s+' sesi</span><button class="icon" data-del="'+k+'" aria-label="Sil">✕</button></div>').join('')
+    :'<p class="small">Henüz kelime yok.</p>';
+}
+$('#kWord').addEventListener('input',kLetters);
+$('#kEmoji').addEventListener('input',()=>{kS.img=null;kPrev();});
+$('#kLet').addEventListener('click',e=>{const b=e.target.closest('[data-k]');if(!b)return;kS.L=b.dataset.k;kLetters();});
+$('#kPhoto').onclick=()=>{const f=$('#kFile');f.value='';f.click();};
+$('#kFile').addEventListener('change',e=>{
+  const file=e.target.files&&e.target.files[0];if(!file)return;
+  const fr=new FileReader();fr.onload=()=>{const im=new Image();im.onload=()=>{
+    const m=240,sc=Math.min(1,m/Math.max(im.width,im.height)),c=document.createElement('canvas');
+    c.width=Math.round(im.width*sc);c.height=Math.round(im.height*sc);c.getContext('2d').drawImage(im,0,0,c.width,c.height);
+    kS.img=c.toDataURL('image/jpeg',0.75);kPrev();
+  };im.src=fr.result;};fr.readAsDataURL(file);
+});
+$('#kTest').onclick=async()=>{const w=kWordVal();if(!w)return;const my=await begin();await sayWord(w,kS.L?posOf(w,kS.L)[0]:null,null,my);};
+$('#kAdd').onclick=()=>{
+  const w=kWordVal();if(!w||!kS.L){alert('Önce bir kelime yazın.');return;}
+  const e=kS.img||$('#kEmoji').value.trim()||'⭐';
+  CUSTOM.push({s:kS.L,w,e});store.set('custom',CUSTOM);
+  if(store.get('custom',[]).length!==CUSTOM.length){alert('Hafıza dolu, fotoğraf kaydedilemedi. Emoji ile deneyin.');CUSTOM.pop();}
+  $('#kWord').value='';$('#kEmoji').value='';kS={L:null,img:null};kelRender();
+};
+$('#kList').addEventListener('click',e=>{const b=e.target.closest('[data-del]');if(!b)return;if(confirm('Bu kelime silinsin mi?')){CUSTOM.splice(+b.dataset.del,1);store.set('custom',CUSTOM);kelRender();}});
+
+/* ---------- TERAPİSTE RAPOR ---------- */
+function buildReport(){
+  const L=[];const now=new Date();
+  L.push('🦜 Ses Macerası – Gelişim özeti');L.push('Tarih: '+now.toLocaleDateString('tr-TR',{day:'numeric',month:'long',year:'numeric'}));
+  let sec=0,rounds=0,days=0;for(let i=0;i<7;i++){const d=new Date();d.setDate(d.getDate()-i);const x=STATS.D[dayKey(d)];if(x&&(x.sec||x.rounds)){days++;sec+=x.sec||0;rounds+=x.rounds||0;}}
+  L.push('Son 7 gün: '+Math.round(sec/60)+' dk, '+days+' gün, '+rounds+' tur');L.push('');
+  const rows=panRows();
+  if(rows.length){
+    L.push('Ses bazında (en zorlandığı üstte):');
+    const pc=(a,b)=>b?('%'+Math.round(a/b*100)+' ('+(Math.round(a*10)/10)+'/'+b+')'):'–';
+    rows.forEach(x=>L.push(x.L+' – Dinleme '+pc(x.sc.lok,x.sc.ltot)+', Söyleme '+pc(x.sc.pok,x.sc.ptot)+', Taklit '+(x.o.tk||0)));
+    const weak=rows.filter(x=>x.sc.tot>=5&&x.sc.pct<0.7).map(x=>x.L);
+    if(weak.length)L.push('Zorlandığı sesler: '+weak.join(', '));
+    L.push('');
+  }
+  const h=store.get('maps',[]);
+  if(h.length){
+    const r=h[0],sym={ok:'✓',x:'✗',near:'≈',skip:'atlandı'};
+    L.push('Son Ses Haritası ('+new Date(r.d).toLocaleDateString('tr-TR',{day:'numeric',month:'long'})+'):');
+    ORDER.filter(s=>r.res[s]).forEach(s=>{L.push(s+': '+['bas','orta','son'].filter(p=>r.res[s][p]).map(p=>POSN[p]+' '+sym[r.res[s][p]]).join(', '));});
+    if(r.notes.length)L.push('Notlar: '+r.notes.join('; '));
+    L.push('');
+  }
+  L.push('Dinleme: oyunlarda sesleri doğru ayırt etme. Söyleme: ebeveynin işaretlediği telaffuz (yaklaştı = yarım puan).');
+  L.push('Not: Bu bilgiler ebeveyn gözlemidir, ölçüm aracı değildir.');
+  return L.join('\n');
+}
+$('#panShare').onclick=async()=>{
+  const txt=buildReport();const box=$('#repBox');box.hidden=false;box.value=txt;
+  if(navigator.share){try{await navigator.share({title:'Ses Macerası özeti',text:txt});return;}catch(e){}}
+  try{await navigator.clipboard.writeText(txt);$('#repMsg').textContent='Özet kopyalandı. WhatsApp\'a yapıştırabilirsiniz.';}
+  catch(e){box.select();$('#repMsg').textContent='Aşağıdaki metni seçip kopyalayın.';}
+};
+
+/* ---------- SES OYUNLARI (hece, kafiye, ilk ses) ---------- */
+const RHYMES=[
+ [['buz','🧊'],['muz','🍌'],['tuz','🧂']],
+ [['bebek','👶'],['köpek','🐶'],['ördek','🦆'],['çiçek','🌸'],['böcek','🐞'],['çilek','🍓']],
+ [['aslan','🦁'],['kaplan','🐯'],['tavşan','🐰'],['yılan','🐍'],['fincan','☕']],
+ [['balon','🎈'],['limon','🍋']],
+ [['gitar','🎸'],['mantar','🍄']],
+ [['güneş','☀️'],['ateş','🔥']],
+ [['kitap','📖'],['çorap','🧦']],
+ [['ok','🏹'],['fok','🦭']],
+ [['ağaç','🌳'],['taç','👑']],
+ [['ayı','🐻'],['arı','🐝'],['kapı','🚪']]
+];
+let fon={mode:'hece',w:null,claps:0,last:'',lock:false,t:null,opts:[],ans:0};
+function fonSegRender(){document.querySelectorAll('#fonSeg button').forEach(b=>b.classList.toggle('on',b.dataset.fm===fon.mode));}
+$('#fonSeg').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;fon.mode=b.dataset.fm;fonNext();});
+function fonNext(){fonSegRender();fon.lock=false;if(fon.mode==='hece')heceNext();else if(fon.mode==='kafiye')kafNext();else ilkNext();}
+function sylHTML(w){return syllabify(w).map(([a,b],k)=>'<span class="syl" data-i="'+k+'">'+w.slice(a,b)+'</span>').join('<span class="dash">-</span>');}
+async function saySyl(w,my){
+  const sy=syllabify(w);const els=[...document.querySelectorAll('#fonArea .syl')];
+  for(let k=0;k<sy.length;k++){if(my!==seq)return;els.forEach(x=>x.classList.remove('lit'));if(els[k])els[k].classList.add('lit');
+    await say(w.slice(sy[k][0],sy[k][1]),S.rate*0.7);await wait(250);}
+  els.forEach(x=>x.classList.remove('lit'));
+}
+/* hece */
+function heceNext(){
+  let pool=WORDS.filter(x=>{const n=syllabify(x.w).length;return n>=1&&n<=4&&x.w!==fon.last;});
+  const x=rnd(pool);fon.w=x;fon.last=x.w;fon.claps=0;
+  $('#fonHint').textContent='Kelimeyi dinle, her hecede bir alkış! 👏';
+  $('#fonArea').innerHTML='<div class="bigpic"><span class="em">'+x.e+'</span><span class="word" id="heceWord">'+x.w+'</span></div><div class="claps" id="claps"></div>';
+  $('#fonCtl').innerHTML='<button class="btn orange clapbtn" id="fClap">👏</button><div class="center ctl" style="margin-top:0"><button class="btn ok" id="fDone">Tamam ✓</button><button class="btn blue" id="fListen">🔊 Dinle</button><button class="btn" id="fReset">Sıfırla</button><button class="btn" id="fNext">Sonraki</button></div>';
+  (async()=>{const my=await begin();await say('Kaç hece? Alkışla!');if(my!==seq)return;await wait(150);await say(x.w,S.rate*0.8);})();
+}
+function clapsRender(){$('#claps').innerHTML=Array.from({length:fon.claps},()=>'<span>👏</span>').join('');}
+/* kafiye */
+function kafNext(){
+  let si;do{si=Math.floor(Math.random()*RHYMES.length);}while(RHYMES[si][0][0]===fon.last&&RHYMES.length>1);
+  const set=shuffle(RHYMES[si]);const t=set[0],m=set[1];
+  const others=RHYMES.filter((x,k)=>k!==si).flat().filter(o=>o[0].slice(-2)!==t[0].slice(-2));
+  const f=rnd(others);fon.t=t;fon.last=t[0];fon.opts=shuffle([m,f]);fon.ans=fon.opts.indexOf(m);
+  $('#fonHint').textContent='Hangisi aynı sesle bitiyor? 🎵';
+  $('#fonArea').innerHTML='<div class="refcard"><span class="em">'+t[1]+'</span><span class="word">'+t[0]+'</span></div><div class="pair" id="fonPair">'+
+    fon.opts.map((o,k)=>'<button class="pic" data-o="'+k+'"><span class="em">'+o[1]+'</span><span class="word">'+o[0]+'</span></button>').join('')+'</div>';
+  $('#fonCtl').innerHTML='<button class="btn blue" id="fListen">🔊 Tekrar dinle</button><button class="btn" id="fNext">Sonraki</button>';
+  kafSay();
+}
+async function kafSay(){const my=await begin();await say(fon.t[0]+'. Hangisi '+fon.t[0]+' gibi bitiyor?');if(my!==seq)return;await wait(300);await say(fon.opts[0][0]+' mi, '+fon.opts[1][0]+' mi?');}
+function sufIdx(a,b){let n=0;while(n<a.length&&n<b.length&&a[a.length-1-n]===b[b.length-1-n])n++;return Array.from({length:n},(_,k)=>a.length-n+k);}
+/* ilk ses */
+function ilkNext(){
+  const easy=wantEasy();let base=easy?EARLY:S.sounds;
+  const ok=L=>WORDS.filter(x=>x.w[0]===lc(L)).length>=2;
+  let ls=base.filter(ok);if(!ls.length)ls=ALPHA.filter(ok);
+  const L=rnd(ls),c=lc(L);
+  const starts=shuffle(WORDS.filter(x=>x.w[0]===c).filter((x,k,a)=>a.findIndex(y=>y.w===x.w)===k));
+  const ref=starts[0],good=starts[1];
+  const bad=rnd(WORDS.filter(x=>x.w[0]!==c));
+  fon.t=ref;fon.last=ref.w;fon.opts=shuffle([good,bad]);fon.ans=fon.opts.indexOf(good);
+  $('#fonHint').textContent='Hangisi aynı sesle başlıyor? 🔤';
+  $('#fonArea').innerHTML='<div class="refcard"><span class="em">'+ref.e+'</span><span class="word">'+wordHTML(ref.w,[0])+'</span></div><div class="pair" id="fonPair">'+
+    fon.opts.map((o,k)=>'<button class="pic" data-o="'+k+'"><span class="em">'+o.e+'</span><span class="word">'+o.w+'</span></button>').join('')+'</div>';
+  $('#fonCtl').innerHTML='<button class="btn blue" id="fListen">🔊 Tekrar dinle</button><button class="btn" id="fNext">Sonraki</button>';
+  ilkSay();
+}
+async function ilkSay(){const my=await begin();await sayWord(fon.t.w,0,$('#fonArea .refcard'),my);if(my!==seq)return;await wait(200);await say('Hangisi '+fon.t.w+' gibi başlıyor?');if(my!==seq)return;await wait(300);await say(fon.opts[0].w+' mi, '+fon.opts[1].w+' mi?');}
+$('#fonCtl').addEventListener('click',async e=>{
+  const id=(e.target.closest('button')||{}).id;if(!id)return;
+  if(id==='fNext'){fonNext();return;}
+  if(id==='fListen'){
+    if(fon.mode==='hece'){const my=await begin();await say(fon.w.w,S.rate*0.8);}
+    else if(fon.mode==='kafiye')kafSay();else ilkSay();
+    return;
+  }
+  if(fon.mode!=='hece')return;
+  if(id==='fClap'){if(fon.lock)return;fon.claps=Math.min(fon.claps+1,8);clapsRender();const b=$('#fClap');b.classList.remove('pulse');void b.offsetWidth;b.classList.add('pulse');}
+  if(id==='fReset'){fon.claps=0;clapsRender();}
+  if(id==='fDone'){
+    if(fon.lock)return;const n=syllabify(fon.w.w).length;$('#heceWord').innerHTML=sylHTML(fon.w.w);
+    if(fon.claps===n){
+      fon.lock=true;addStar();hit();logRound();
+      const my=await begin();await say(praise()+' '+n+' hece!');if(my!==seq)return;await wait(200);await saySyl(fon.w.w,my);
+      if(my===seq&&cur==='fon')thenDo(heceNext);
+    }else{
+      miss();logRound();fon.claps=0;clapsRender();
+      const my=await begin();await say('Birlikte sayalım!');if(my!==seq)return;await wait(200);await saySyl(fon.w.w,my);
+      if(my===seq){await wait(150);await say('Şimdi sen alkışla!');}
+    }
+  }
+});
+$('#fonArea').addEventListener('click',async e=>{
+  const b=e.target.closest('[data-o]');if(!b||fon.lock||fon.mode==='hece')return;const k=+b.dataset.o;
+  if(k===fon.ans){
+    fon.lock=true;b.classList.add('good');addStar();hit();logRound();
+    const o=fon.opts[k];
+    if(fon.mode==='kafiye'){
+      const idx=sufIdx(fon.t[0],o[0]),idx2=sufIdx(o[0],fon.t[0]);
+      $('#fonArea .refcard .word').innerHTML=wordHTML(fon.t[0],idx);b.querySelector('.word').innerHTML=wordHTML(o[0],idx2);
+    }else{b.querySelector('.word').innerHTML=wordHTML(o.w,[0]);}
+    const my=await begin();await say(praise());if(my!==seq)return;await wait(150);
+    await say(fon.mode==='kafiye'?(fon.t[0]+', '+o[0]+'!'):(fon.t.w+', '+o.w+'!'));
+    await wait(400);if(my===seq&&cur==='fon')thenDo(fonNext);
+  }else{
+    miss();logRound();b.classList.remove('shake');void b.offsetWidth;b.classList.add('shake');
+    const my=await begin();await say('Bir daha dinleyelim.');if(my!==seq)return;await wait(200);
+    if(fon.mode==='kafiye')kafSay();else ilkSay();
+  }
+});
 
 /* ---------- AYARLAR ---------- */
 function setRender(){
